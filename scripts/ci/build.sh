@@ -6,6 +6,7 @@ set -euo pipefail
 cd td
 rm -rf build
 mkdir build
+cd build
 
 CXXFLAGS="-stdlib=libc++" \
     CC=/usr/bin/clang-18 \
@@ -17,8 +18,13 @@ CXXFLAGS="-stdlib=libc++" \
         -DCMAKE_AR=/usr/bin/llvm-ar-18 \
         -DCMAKE_NM=/usr/bin/llvm-nm-18 \
         -DCMAKE_OBJDUMP=/usr/bin/llvm-objdump-18 \
-        -DCMAKE_RANLIB=/usr/bin/llvm-ranlib-18
+        -DCMAKE_RANLIB=/usr/bin/llvm-ranlib-18 \
+        ..
 
-cmake --build ./build/ --target install
+cmake --build . --target install
+
+cd ..
+cd ..
+ls -l td/tdlib
 
 tree ./tdlib

@@ -18,7 +18,7 @@ jobs:
   publish:
     permissions:
       contents: write
-    name: publish (${{ matrix.os }}
+    name: publish (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
