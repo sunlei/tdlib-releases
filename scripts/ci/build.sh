@@ -25,6 +25,5 @@ cmake --build . --target install
 
 cd ..
 cd ..
-ls -l td/tdlib
-
-tree ./tdlib
+ls -alh td/tdlib
+tree td/tdlib
