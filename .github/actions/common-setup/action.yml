@@ -1,0 +1,37 @@
+name: common-setup
+description: Common environment setup
+
+inputs:
+  python-version:
+    description: The Python version to setup
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    # > --------------------------------------------------
+    # > ENV
+    # - name: Set env vars (common)
+    #   shell: bash
+    #   run: |
+    #     bash ./scripts/ci/set-env-vars.sh
+
+    # > --------------------------------------------------
+    # > OS
+    # https://tdlib.github.io/td/build.html?language=Python
+    - name: Install / Update OS dependencies
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt install -y \
+          curl \
+          make \
+          git \
+          zlib1g-dev \
+          libssl-dev \
+          gperf \
+          php-cli \
+          cmake \
+          clang-18 \
+          libc++-18-dev \
+          libc++abi-18-dev

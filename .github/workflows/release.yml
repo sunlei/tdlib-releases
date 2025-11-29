@@ -1,0 +1,74 @@
+name: "release"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - nightly
+      - develop
+  # schedule:
+  #   - cron: "0 0 * * *"
+
+# on:
+#   repository_dispatch:
+#     types: [on-demand-release]
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+    name: publish (${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          # > --------------------------------------------------
+          # > Ubuntu 24.04
+          - os: ubuntu-24.04
+          # > --------------------------------------------------
+          # > macOS 15
+          # - os: macos-15
+          # - os: macos-13
+    defaults:
+      run:
+        shell: bash
+    steps:
+      # > --------------------------------------------------
+      # > Repository
+      - name: Checkout repository `self`
+        uses: actions/checkout@v6
+
+      - name: Checkout repository `td`
+        uses: actions/checkout@v6
+        id: nautilus-trader-checkout
+        with:
+          repository: tdlib/td
+          ref: master
+          path: td
+
+      # > --------------------------------------------------
+      # > Common setup: 需放到 `checkout` 之后，才能正确生成 cache key
+      - name: Common setup
+        uses: ./.github/actions/common-setup
+
+      # > --------------------------------------------------
+      # > Debug
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     limit-access-to-actor: true
+
+      - name: Build
+        shell: bash
+        run: |
+          bash ./scripts/ci/build.sh
+
+      # - name: Release
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     files: src/dist/*.whl
+      #     tag_name: v${{ env.RELEASE_VERSION }}
+      #     name: v${{ env.RELEASE_VERSION }}
+      #     body: |
+      #       NautilusTrader Commit: [${{ steps.nautilus-trader-checkout.outputs.commit }}](https://github.com/nautechsystems/nautilus_trader/commit/${{ steps.nautilus-trader-checkout.outputs.commit }})
